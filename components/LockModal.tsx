@@ -12,8 +12,7 @@ import { Modals } from '@modules';
 import LockIcon from './LockIcon';
 
 const LockModal = makeLazy({
-  // eslint-disable-next-line require-await
-  promise: async () => {
+  promise: () => {
 
     //@ts-ignore
     const { ModalRoot, ModalSize, ModalHeader, ModalContent, ModalFooter } = Modals.Components;
@@ -49,17 +48,15 @@ const LockModal = makeLazy({
               <ModalHeader separator={false} className='header-3ydO_m'>
                 <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-33m_XM'>
                   Locked
+                  <LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
                 </Text>
-                <LockIcon width='60px' height='45px' />
               </ModalHeader>
               <form onSubmit={(e): void => {
                 e.preventDefault();
-                if (this.props.onUnlock(this.state.passcode) === false) {
-                  this.setState({
-                    passcode: '',
-                    submitError: 'Incorrect passcode' 
-                  });
-                }
+                if (this.props.onUnlock(this.state.passcode) === false) this.setState({
+                  passcode: '',
+                  submitError: 'Incorrect passcode' 
+                });
               }}>
                 <ModalContent className='content-1AKki_'>
                   <Input label='Passcode' name='Passcode' autoFocus={true} value={this.state.passcode} onChange={(passcode: string): void => this.setState({ passcode, submitError: null })} error={this.state.submitError} type='password'/>
@@ -75,12 +72,13 @@ const LockModal = makeLazy({
         );
       }
     }
-    return LockModal;
+
+    return Promise.resolve(LockModal);
   },
   displayName: 'LockModal'
 });
 
-export class LockModalErrorBoundary extends ErrorBoundary {
+class LockModalErrorBoundary extends ErrorBoundary {
   constructor(props) {
     props.label = 'Lock modal';
     super(props);
@@ -89,3 +87,4 @@ export class LockModalErrorBoundary extends ErrorBoundary {
     return <LockModal {...this.props}/>;
   }
 }
+export { LockModalErrorBoundary as LockModal };

@@ -1,13 +1,3 @@
-.lockdown-notif {
-    border-left: 5px solid var(--grad-one);
-    border-radius: 5px;
-    & .astraNotificationLoadbar {
-        height: 100%;
-        opacity: 0.2;
-        background-image: linear-gradient(130deg, var(--grad-one), var(--notifications-background-color));
-    }
-}
-
 .lockdown-modal-container {
     pointer-events: none;
     user-select: none;
