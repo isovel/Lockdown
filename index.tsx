@@ -9,7 +9,7 @@ import crypto from 'crypto';
 
 import { UPlugin, StyleSheet, SettingsObject } from '@classes';
 //@ts-ignore
-import { closeModal, openModal } from '@modules/Modals';
+import { openModal, closeModal, closeAllModals } from '@modules/Modals';
 import { React } from '@webpack';
 
 import { LockModal, LockdownSettings } from './components';
@@ -73,6 +73,7 @@ class Lockdown extends UPlugin {
 
   private _lock(): void | boolean {
     if (this.locked) return false;
+    closeAllModals();
     //@ts-ignore
     this.lockModal = openModal(props => <LockModal {...props} onUnlock={(passcode): void | boolean => this._unlock(passcode)}/>, { onCloseRequest: () => null });
   }

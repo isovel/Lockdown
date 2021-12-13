@@ -1,7 +1,7 @@
 {
     "name": "Lockdown",
     "description": "Locks the discord client after a certain amount of time and requires a passcode to unlock it.",
-    "version": "0.1",
+    "version": "1.0.1-β1",
     "author": {
         "name": "Toasty",
         "id": "255515821541949440"
