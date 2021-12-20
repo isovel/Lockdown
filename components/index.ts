@@ -6,4 +6,5 @@
  * ————————————————————————————————————————————————————————————————————————————— */
 
 export * from './LockModal';
+export * from './NewUserModal';
 export * from './Settings';
