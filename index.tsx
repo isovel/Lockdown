@@ -68,7 +68,7 @@ class Lockdown extends UPlugin {
   // Handle user onboarding
   private _onboardUser(): void {
     //@ts-ignore
-    const modal = openModal(props => <NewUserModal {...props} onSetPasscode={this._setPasscode} onClose={() => Astra.plugins.disable('Lockdown') && closeModal(modal)}/>, { onCloseRequest: () => Astra.plugins.disable('Lockdown') && closeModal(modal) });
+    const modal = openModal(props => <NewUserModal {...props} onSetPasscode={this._setPasscode} onFinish={() => Astra.plugins.reload() && closeModal(modal)} onClose={() => Astra.plugins.disable('Lockdown') && closeModal(modal)}/>, { onCloseRequest: () => Astra.plugins.disable('Lockdown') && closeModal(modal) });
   }
 
   // Set passcode

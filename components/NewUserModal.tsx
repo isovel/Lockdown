@@ -7,12 +7,17 @@
 
 import { React, DNGetter, getByProps } from '@webpack';
 import { makeLazy } from '@util';
-import { ErrorBoundary } from '@components';
+import { ErrorBoundary, Slider } from '@components';
 import { Modals } from '@modules';
+
 import LockIcon from './LockIcon';
+
+import { LockdownSettings } from '../types';
 
 const NewUserModal = makeLazy({
   promise: () => {
+
+    const settings = Astra.settings.get<LockdownSettings>('Lockdown');
 
     //@ts-ignore
     const { ModalRoot, ModalSize, ModalHeader, ModalContent, ModalFooter, ModalCloseButton } = Modals.Components;
@@ -54,7 +59,8 @@ const NewUserModal = makeLazy({
               <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-7KIelA'>
                 {this.state.step === 0 && 'Welcome to Lockdown!'}
                 {this.state.step === 1 && 'Create a passcode'}
-                {this.state.step === 2 && 'Tutorial'}
+                {this.state.step === 2 && 'Setup timeout'}
+                {this.state.step === 3 && 'Tutorial'}
                 <LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
               </Text>
               <ModalCloseButton onClick={this.props.onClose} className='modalCloseButton-1tQPZJ' />
@@ -73,6 +79,15 @@ const NewUserModal = makeLazy({
                 <>
                   <Input label='New Passcode' name='Passcode' autoFocus={false} value={this.state.newPasscode} onChange={(newPasscode: string): void => this.setState({ newPasscode })} error={this.state.newPasscodeError} type='password'/>
                   <Input label='Confirm New Passcode' name='Passcode' autoFocus={false} value={this.state.confirmPasscode} onChange={(confirmPasscode: string): void => this.setState({ confirmPasscode })} error={this.state.confirmPasscodeError} className='newPassword-2xUoju' type='password'/>
+                </>
+              )}
+              {this.state.step === 2 && (
+                <>
+                  <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16} className='subtitle-2RGT-H'>
+                    Lockdown will automatically lock your client after a set amount of time.
+                    You can change this later.<br/><br/>
+                  </Text>
+                  <Slider initialValue={5} onMarkerRender={(value): string => (value === 0 ? 'Off' : `${value}m`)} onValueRender={(value): string => `${Math.round(value)} mins`} onValueChange={(value: number): any => settings.set('timeoutTime', Math.round(value))} markers={[0, 1, 2, 3, 5, 10, 15, 30, 60]} equidistant={true} keyboardStep={1} handleSize={1} maxValue={60} minValue={1} stickToMarkers={true}/>
                 </>
               )}
             </ModalContent>
@@ -102,9 +117,14 @@ const NewUserModal = makeLazy({
                     this.setState({ newPasscodeError: ret, confirmPasscodeError: ret });
                     return;
                   }
-                  this.props.onClose();
+                  this.setState({ step: 2 });
                 }}>
                   Next
+                </Button>
+              )}
+              {this.state.step === 2 && (
+                <Button color={Button.Colors.BRAND} size={Button.Sizes.MEDIUM} onClick={() => this.props.onClose()}>
+                  Finish
                 </Button>
               )}
               <Button onClick={this.props.onClose} color={Button.Colors.PRIMARY} look={Button.Looks.LINK} className='cancel-3-Mvz6'>
@@ -112,7 +132,7 @@ const NewUserModal = makeLazy({
               </Button>
               {this.state.step > 0 && (
                 <Button color={Button.Colors.PRIMARY} look={Button.Looks.LINK} disabled={true} className='cancel-3-Mvz6 lockdown-newusermodal-stepcounter'>
-                  Step <strong>{this.state.step}</strong> of <strong>3</strong>
+                  Step <strong>{this.state.step}</strong> of <strong>2</strong>
                 </Button>
               )}
             </ModalFooter>
