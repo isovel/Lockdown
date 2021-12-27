@@ -7,7 +7,7 @@
 
 import { React, DNGetter, getByProps } from '@webpack';
 import { makeLazy } from '@util';
-import { ErrorBoundary, Slider } from '@components';
+import { ErrorBoundary, Slider, FormItem } from '@components';
 import { Modals } from '@modules';
 
 import LockIcon from './LockIcon';
@@ -60,7 +60,7 @@ const NewUserModal = makeLazy({
                 {this.state.step === 0 && 'Welcome to Lockdown!'}
                 {this.state.step === 1 && 'Create a passcode'}
                 {this.state.step === 2 && 'Setup timeout'}
-                {this.state.step === 3 && 'Tutorial'}
+                {this.state.step === 3 && 'Thanks for using Lockdown!'}
                 <LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
               </Text>
               <ModalCloseButton onClick={this.props.onClose} className='modalCloseButton-1tQPZJ' />
@@ -87,7 +87,9 @@ const NewUserModal = makeLazy({
                     Lockdown will automatically lock your client after a set amount of time.
                     You can change this later.<br/><br/>
                   </Text>
-                  <Slider initialValue={5} onMarkerRender={(value): string => (value === 0 ? 'Off' : `${value}m`)} onValueRender={(value): string => `${Math.round(value)} mins`} onValueChange={(value: number): any => settings.set('timeoutTime', Math.round(value))} markers={[0, 1, 2, 3, 5, 10, 15, 30, 60]} equidistant={true} keyboardStep={1} handleSize={1} maxValue={60} minValue={1} stickToMarkers={true}/>
+                  <FormItem title='Timeout' className='marginTop20-3TxNs6'>
+                    <Slider initialValue={5} onMarkerRender={(value): string => (value === 0 ? 'Off' : `${value}m`)} onValueRender={(value): string => `${Math.round(value)} mins`} onValueChange={(value: number): any => settings.set('timeoutTime', Math.round(value))} markers={[0, 1, 2, 3, 5, 10, 15, 30, 60]} equidistant={true} keyboardStep={1} handleSize={1} maxValue={60} minValue={1} stickToMarkers={true}/>
+                  </FormItem>
                 </>
               )}
             </ModalContent>

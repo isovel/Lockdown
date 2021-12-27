@@ -15,5 +15,7 @@
 }
 
 .lockdown-newusermodal-stepcounter {
-    justify-self: end;
+    margin-right: auto;
+    user-select: none;
+    pointer-events: none;
 }
