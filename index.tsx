@@ -9,11 +9,39 @@ import crypto from 'crypto';
 
 import { UPlugin, StyleSheet, SettingsObject } from '@classes';
 //@ts-ignore
-import { openModal, closeModal, closeAllModals } from '@modules/Modals';
+import { openModal, openConfirmationModal, closeModal, closeAllModals } from '@modules/Modals';
+import { autoBind } from '@util';
 import { React } from '@webpack';
 
 import { LockdownSettings, LockModal, NewUserModal } from './components';
-import { autoBind } from '@util';
+
+let LoafLib: any | null = null;
+try {
+  LoafLib = require('../LoafLib');
+} catch (e) {
+  const { Text } = require('@webpack').DNGetter;
+  openConfirmationModal(
+    'Missing Library',
+    <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16}>
+      The library <strong>LoafLib</strong> required for <strong>ServerFeatures</strong> is missing.
+      Please click Download Now to download it.
+    </Text>,
+    {
+      cancelText: 'Cancel',
+      confirmText: 'Download Now',
+      modalKey: 'ServerFeatures_DEP_MODAL',
+      onConfirm: () => {
+        const path = require('path');
+        const git = require('isomorphic-git');
+        const http = require('isomorphic-git/http/node');
+        const fs = require('fs');
+        git.clone({ fs, http, dir: path.join(__dirname, '../', 'LoafLib'), url: 'https://github.com/toastythetoaster/LoafLib' }).then(() => {
+          Astra.plugins.reload('ServerFeatures');
+        });
+      }
+    }
+  );
+}
 
 const style: StyleSheet = require('./style.scss');
 const settings: SettingsObject = Astra.settings.get('Lockdown');
@@ -35,6 +63,7 @@ class Lockdown extends UPlugin {
   }
 
   start(): void {
+    if (LoafLib === null) return;
     style.attach();
     // eslint-disable-next-line curly
     if (!settings.get('pwd_salt', false) || !settings.get('pwd_hash', false)) {
@@ -58,6 +87,7 @@ class Lockdown extends UPlugin {
   }
 
   stop(): void {
+    if (LoafLib === null) return;
     this._clearInterval();
     window.removeEventListener('keydown', this._debugCallback, false);
     window.removeEventListener('keydown', this._keydownCallback, false);
