@@ -10,8 +10,9 @@ import crypto from 'crypto';
 import { UPlugin, StyleSheet, SettingsObject } from '@classes';
 //@ts-ignore
 import { openModal, openConfirmationModal, closeModal, closeAllModals } from '@modules/Modals';
-import { autoBind } from '@util';
-import { React } from '@webpack';
+import { autoBind, suppressErrors } from '@util';
+import { React, getByProps } from '@webpack';
+import { before, unpatchAll } from '@patcher';
 
 import { LockdownSettings, LockModal, NewUserModal } from './components';
 
@@ -19,7 +20,7 @@ let LoafLib: any | null = null;
 try {
   LoafLib = require('../LoafLib');
 } catch (e) {
-  if (window.LoafLib) ({ LoafLib } = window);
+  if (global.LoafLib) ({ LoafLib } = global);
   else {
     const { Text } = require('@webpack').DNGetter;
     openConfirmationModal(
@@ -81,6 +82,7 @@ class Lockdown extends UPlugin {
           }
         ]
       };
+      suppressErrors(this._patchNotifications.bind(this))(this.promises);
       window.addEventListener('mousemove', this._mousemoveCallback, false);
       window.addEventListener('keydown', this._keydownCallback, false);
       window.addEventListener('keydown', this._debugCallback, false);
@@ -95,6 +97,7 @@ class Lockdown extends UPlugin {
     window.removeEventListener('keydown', this._debugCallback, false);
     window.removeEventListener('keydown', this._keydownCallback, false);
     window.removeEventListener('mousemove', this._mousemoveCallback, false);
+    unpatchAll('Lockdown');
     style.detach();
   }
 
@@ -136,6 +139,16 @@ class Lockdown extends UPlugin {
     } else return false;
     
     return true;
+  }
+
+  private _patchNotifications(): void {
+    before('Lockdown', getByProps('showNotification'), 'showNotification', (_, args) => {
+      if (this.locked) {
+        args[0] = 'https://example.com/lock_sparkles.png';
+        args[1] = '';
+        args[2] = 'You have a new message.';
+      }
+    });
   }
 
   // Set locking timeout interval
