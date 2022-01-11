@@ -1,9 +1,9 @@
 
-/* ———————————————————— Copyright (c) 2021 toastythetoaster ————————————————————
+/* ——————— Copyright (c) 2021-2022 toastythetoaster. All rights reserved. ———————
  *
  * New User Modal Component
  *
- * ————————————————————————————————————————————————————————————————————————————— */
+ * —————————————————————————————————————————————————————————————————————————————— */
 
 import { React, DNGetter, getByProps } from '@webpack';
 import { makeLazy } from '@util';

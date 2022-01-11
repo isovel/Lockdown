@@ -1,9 +1,9 @@
 
-/* ———————————————————— Copyright (c) 2021 toastythetoaster ————————————————————
+/* ——————— Copyright (c) 2021-2022 toastythetoaster. All rights reserved. ———————
  *
  * Lock Modal Component
  *
- * ————————————————————————————————————————————————————————————————————————————— */
+ * —————————————————————————————————————————————————————————————————————————————— */
 
 import { React, DNGetter, getByProps } from '@webpack';
 import { makeLazy } from '@util';
@@ -32,35 +32,20 @@ const LockModal = makeLazy({
     }
 
     interface LockModalState {
-      focused: boolean
       passcode: string
       submitError: string | null
     }
 
     class LockModal extends React.PureComponent<LockModalProps, LockModalState> {
-      state = { 
-        focused: true,
+      state = {
         passcode: '',
         submitError: null
       };
-      input = null;
-      constructor(props: LockModalProps) {
-        super(props);
-      }
-      componentDidMount() {
-        window.addEventListener('keydown', this.handleKeyDown, false);
-      }
-      componentWillUnmount() {
-        window.removeEventListener('keydown', this.handleKeyDown, false);
-      }
-      handleKeyDown(e: KeyboardEvent) {
-       !this.state.focused && this.input.focus();
-      }
       render(): any {
         return (
           <div className='lockdown-modal-container'>
             <ModalRoot className='lockdown-modal' transitionState={this.props.transitionState} size={ModalSize.SMALL}>
-              <ModalHeader separator={false} className='header-3ydO_m'>
+              <ModalHeader separator={false} className='header-1LEkUo'>
                 <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-33m_XM'>
                   Locked
                   <LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
@@ -74,7 +59,7 @@ const LockModal = makeLazy({
                 });
               }}>
                 <ModalContent className='content-1AKki_'>
-                  <Input label='Passcode' name='Passcode' autoFocus={true} value={this.state.passcode} ref={i => { this.input = i; }} onFocus={() => { this.state.focused = true; }} onBlur={() => { this.state.focused = false; }} onChange={(passcode: string): void => this.setState({ passcode, submitError: null })} error={this.state.submitError} type='password'/>
+                  <Input label='Passcode' name='Passcode' autoFocus={true} value={this.state.passcode} onChange={(passcode: string): void => this.setState({ passcode, submitError: null })} error={this.state.submitError} type='password'/>
                 </ModalContent>
                 <ModalFooter className='footer-2YW1l'>
                   <Button color={this.state.submitError ? Button.Colors.PRIMARY : Button.Colors.BRAND} disabled={!!this.state.submitError} className='lockdown-btn-unlock' type='submit'>

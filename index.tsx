@@ -1,9 +1,9 @@
 
-/* ———————————————————— Copyright (c) 2021 toastythetoaster ————————————————————
+/* ——————— Copyright (c) 2021-2022 toastythetoaster. All rights reserved. ———————
  *
  * Lockdown Plugin
  *
- * ————————————————————————————————————————————————————————————————————————————— */
+ * —————————————————————————————————————————————————————————————————————————————— */
 
 import crypto from 'crypto';
 
@@ -19,28 +19,31 @@ let LoafLib: any | null = null;
 try {
   LoafLib = require('../LoafLib');
 } catch (e) {
-  const { Text } = require('@webpack').DNGetter;
-  openConfirmationModal(
-    'Missing Library',
-    <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16}>
-      The library <strong>LoafLib</strong> required for <strong>ServerFeatures</strong> is missing.
-      Please click Download Now to download it.
-    </Text>,
-    {
-      cancelText: 'Cancel',
-      confirmText: 'Download Now',
-      modalKey: 'ServerFeatures_DEP_MODAL',
-      onConfirm: () => {
-        const path = require('path');
-        const git = require('isomorphic-git');
-        const http = require('isomorphic-git/http/node');
-        const fs = require('fs');
-        git.clone({ fs, http, dir: path.join(__dirname, '../', 'LoafLib'), url: 'https://github.com/toastythetoaster/LoafLib' }).then(() => {
-          Astra.plugins.reload('ServerFeatures');
-        });
+  if (window.LoafLib) ({ LoafLib } = window);
+  else {
+    const { Text } = require('@webpack').DNGetter;
+    openConfirmationModal(
+      'Missing Library',
+      <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16}>
+        The library <strong>LoafLib</strong> required for <strong>Lockdown</strong> is missing.
+        Please click Download Now to download it.
+      </Text>,
+      {
+        cancelText: 'Cancel',
+        confirmText: 'Download Now',
+        modalKey: 'Lockdown_DEP_MODAL',
+        onConfirm: () => {
+          const path = require('path');
+          const git = require('isomorphic-git');
+          const http = require('isomorphic-git/http/node');
+          const fs = require('fs');
+          git.clone({ fs, http, dir: path.join(__dirname, '../', 'LoafLib'), url: 'https://github.com/toastythetoaster/LoafLib' }).then(() => {
+            Astra.plugins.reload('Lockdown');
+          });
+        }
       }
-    }
-  );
+    );
+  }
 }
 
 const style: StyleSheet = require('./style.scss');
@@ -98,7 +101,7 @@ class Lockdown extends UPlugin {
   // Handle user onboarding
   private _onboardUser(): void {
     //@ts-ignore
-    const modal = openModal(props => <NewUserModal {...props} onSetPasscode={this._setPasscode} onFinish={() => Astra.plugins.reload() && closeModal(modal)} onClose={() => Astra.plugins.disable('Lockdown') && closeModal(modal)}/>, { onCloseRequest: () => Astra.plugins.disable('Lockdown') && closeModal(modal) });
+    const modal = openModal(props => <NewUserModal {...props} onSetPasscode={this._setPasscode} onFinish={() => Astra.plugins.reload('Lockdown') && closeModal(modal)} onClose={() => Astra.plugins.disable('Lockdown') && closeModal(modal)}/>, { onCloseRequest: () => Astra.plugins.disable('Lockdown') && closeModal(modal) });
   }
 
   // Set passcode

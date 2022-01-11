@@ -1,9 +1,9 @@
 
-/* ———————————————————— Copyright (c) 2021 toastythetoaster ————————————————————
+/* ——————— Copyright (c) 2021-2022 toastythetoaster. All rights reserved. ———————
  *
  * Lockdown Settings Component
  *
- * ————————————————————————————————————————————————————————————————————————————— */
+ * —————————————————————————————————————————————————————————————————————————————— */
 
 import { ErrorBoundary, FormSection, FormDivider, FormItem, SwitchItem, Slider, TooltipWrapper } from '@components';
 import { closeModal, openModal } from '@modules/Modals';
