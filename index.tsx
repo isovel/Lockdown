@@ -144,7 +144,7 @@ class Lockdown extends UPlugin {
   private _patchNotifications(): void {
     before('Lockdown', getByProps('showNotification'), 'showNotification', (_, args) => {
       if (this.locked) {
-        args[0] = 'https://example.com/lock_sparkles.png';
+        args[0] = 'https://raw.githubusercontent.com/toastythetoaster/Lockdown/dev/lock_sparkles.png';
         args[1] = '';
         args[2] = 'You have a new message.';
       }
