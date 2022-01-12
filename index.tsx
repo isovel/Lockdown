@@ -171,30 +171,18 @@ class Lockdown extends UPlugin {
 
   // Reset lock timeout on mouse movement
   private _mousemoveCallback(_ev: MouseEvent): void {
-    try {
-      this.lastFocus = Date.now();
-    } catch (e) {
-      Astra.error(e);
-    }
+    this.lastFocus = Date.now();
   }
 
   // Reset lock timeout on keypress
   private _keydownCallback(ev: KeyboardEvent): void {
-    try {
-      this.lastFocus = Date.now();
-      if (!ev.repeat && ev.ctrlKey && ev.key === 'l') this._lock();
-    } catch (e) {
-      Astra.error(e);
-    }
+    this.lastFocus = Date.now();
+    if (!ev.repeat && ev.ctrlKey && ev.key === 'l') this._lock();
   }
 
   // Lock the client if it has been idle for too long
   private _intervalCallback(): void {
-    try {
-      if (this._compareTime(Date.now())) this._lock();
-    } catch (e) {
-      Astra.error(e);
-    }
+    if (this._compareTime(Date.now())) this._lock();
   }
 
   // Unlock the client if the debug keystroke is enabled and pressed
