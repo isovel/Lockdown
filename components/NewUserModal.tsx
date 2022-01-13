@@ -55,20 +55,20 @@ const NewUserModal = makeLazy({
       render(): any {
         return (
           <ModalRoot transitionState={this.props.transitionState} size={ModalSize.SMALL}>
-            <ModalHeader separator={false} className='header-2xfEYR'>
-              <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-7KIelA'>
+            <ModalHeader separator={false} className='header-1LEkUo'>
+              <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-2tnl9d'>
                 {this.state.step === 0 && 'Welcome to Lockdown!'}
                 {this.state.step === 1 && 'Create a passcode'}
                 {this.state.step === 2 && 'Setup timeout'}
                 {this.state.step === 3 && 'Thanks for using Lockdown!'}
                 <LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
               </Text>
-              <ModalCloseButton onClick={this.props.onClose} className='modalCloseButton-1tQPZJ' />
+              <ModalCloseButton onClick={this.props.onClose} className='modalCloseButton-1g0I9f' />
             </ModalHeader>
-            <ModalContent className='content-39mg13'>
+            <ModalContent className='content-qdMtCa'>
               {this.state.step === 0 && (
                 <>
-                  <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16} className='subtitle-2RGT-H'>
+                  <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16} className='subtitle-3sUbvY'>
                     Lockdown protects your privacy by requiring a passcode to access the Discord client.<br/><br/>
                     To start using Lockdown, please set a passcode.
                     You can change your passcode later.<br/><br/>
@@ -78,12 +78,12 @@ const NewUserModal = makeLazy({
               {this.state.step === 1 && (
                 <>
                   <Input label='New Passcode' name='Passcode' autoFocus={false} value={this.state.newPasscode} onChange={(newPasscode: string): void => this.setState({ newPasscode })} error={this.state.newPasscodeError} type='password'/>
-                  <Input label='Confirm New Passcode' name='Passcode' autoFocus={false} value={this.state.confirmPasscode} onChange={(confirmPasscode: string): void => this.setState({ confirmPasscode })} error={this.state.confirmPasscodeError} className='newPassword-2xUoju' type='password'/>
+                  <Input label='Confirm New Passcode' name='Passcode' autoFocus={false} value={this.state.confirmPasscode} onChange={(confirmPasscode: string): void => this.setState({ confirmPasscode })} error={this.state.confirmPasscodeError} className='newPassword-2uGqp4' type='password'/>
                 </>
               )}
               {this.state.step === 2 && (
                 <>
-                  <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16} className='subtitle-2RGT-H'>
+                  <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16} className='subtitle-3sUbvY'>
                     Lockdown will automatically lock your client after a set amount of time.
                     You can change this later.<br/><br/>
                   </Text>
@@ -129,11 +129,11 @@ const NewUserModal = makeLazy({
                   Finish
                 </Button>
               )}
-              <Button onClick={this.props.onClose} color={Button.Colors.PRIMARY} look={Button.Looks.LINK} className='cancel-3-Mvz6'>
+              <Button onClick={this.props.onClose} color={Button.Colors.PRIMARY} look={Button.Looks.LINK} className='cancel-1Qvixr'>
                 Cancel
               </Button>
               {this.state.step > 0 && (
-                <Button color={Button.Colors.PRIMARY} look={Button.Looks.LINK} disabled={true} className='cancel-3-Mvz6 lockdown-newusermodal-stepcounter'>
+                <Button color={Button.Colors.PRIMARY} look={Button.Looks.LINK} disabled={true} className='cancel-1Qvixr lockdown-newusermodal-stepcounter'>
                   Step <strong>{this.state.step}</strong> of <strong>2</strong>
                 </Button>
               )}
