@@ -14,6 +14,7 @@ import { autoBind, suppressErrors } from '@util';
 import { React, getByProps } from '@webpack';
 import { before, unpatchAll } from '@patcher';
 
+import { NotificationArgs } from './types';
 import { LockdownSettings, LockModal, NewUserModal } from './components';
 
 let LoafLib: any | null = null;
@@ -101,6 +102,16 @@ class Lockdown extends UPlugin {
     style.detach();
   }
 
+  private _patchNotifications(): void {
+    before('Lockdown', getByProps('showNotification'), 'showNotification', (_, args: NotificationArgs) => {
+      if (this.locked) {
+        args[0] = 'https://raw.githubusercontent.com/toastythetoaster/Lockdown/dev/lock_sparkles.png';
+        args[1] = '';
+        args[2] = 'You have a new message.';
+      }
+    });
+  }
+
   // Handle user onboarding
   private _onboardUser(): void {
     //@ts-ignore
@@ -139,16 +150,6 @@ class Lockdown extends UPlugin {
     } else return false;
     
     return true;
-  }
-
-  private _patchNotifications(): void {
-    before('Lockdown', getByProps('showNotification'), 'showNotification', (_, args) => {
-      if (this.locked) {
-        args[0] = 'https://raw.githubusercontent.com/toastythetoaster/Lockdown/dev/lock_sparkles.png';
-        args[1] = '';
-        args[2] = 'You have a new message.';
-      }
-    });
   }
 
   // Set locking timeout interval
