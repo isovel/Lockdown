@@ -1,19 +1,52 @@
 
-/* ———————————————————— Copyright (c) 2021 toastythetoaster ————————————————————
+/* ——————— Copyright (c) 2021-2022 toastythetoaster. All rights reserved. ———————
  *
  * Lockdown Plugin
  *
- * ————————————————————————————————————————————————————————————————————————————— */
+ * —————————————————————————————————————————————————————————————————————————————— */
 
 import crypto from 'crypto';
 
 import { UPlugin, StyleSheet, SettingsObject } from '@classes';
 //@ts-ignore
-import { openModal, closeModal, closeAllModals } from '@modules/Modals';
-import { React } from '@webpack';
+import { openModal, openConfirmationModal, closeModal, closeAllModals } from '@modules/Modals';
+import { autoBind, suppressErrors } from '@util';
+import { React, getByProps } from '@webpack';
+import { before, unpatchAll } from '@patcher';
 
+import { NotificationArgs } from './types';
 import { LockdownSettings, LockModal, NewUserModal } from './components';
-import { autoBind } from '@util';
+
+let LoafLib: any | null = null;
+try {
+  LoafLib = require('../LoafLib');
+} catch (e) {
+  if (global.LoafLib) ({ LoafLib } = global);
+  else {
+    const { Text } = require('@webpack').DNGetter;
+    openConfirmationModal(
+      'Missing Library',
+      <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16}>
+        The library <strong>LoafLib</strong> required for <strong>Lockdown</strong> is missing.
+        Please click Download Now to download it.
+      </Text>,
+      {
+        cancelText: 'Cancel',
+        confirmText: 'Download Now',
+        modalKey: 'Lockdown_DEP_MODAL',
+        onConfirm: () => {
+          const path = require('path');
+          const git = require('isomorphic-git');
+          const http = require('isomorphic-git/http/node');
+          const fs = require('fs');
+          git.clone({ fs, http, dir: path.join(__dirname, '../', 'LoafLib'), url: 'https://github.com/toastythetoaster/LoafLib' }).then(() => {
+            Astra.plugins.reload('Lockdown');
+          });
+        }
+      }
+    );
+  }
+}
 
 const style: StyleSheet = require('./style.scss');
 const settings: SettingsObject = Astra.settings.get('Lockdown');
@@ -35,6 +68,7 @@ class Lockdown extends UPlugin {
   }
 
   start(): void {
+    if (LoafLib === null) return;
     style.attach();
     // eslint-disable-next-line curly
     if (!settings.get('pwd_salt', false) || !settings.get('pwd_hash', false)) {
@@ -49,6 +83,7 @@ class Lockdown extends UPlugin {
           }
         ]
       };
+      suppressErrors(this._patchNotifications.bind(this))(this.promises);
       window.addEventListener('mousemove', this._mousemoveCallback, false);
       window.addEventListener('keydown', this._keydownCallback, false);
       window.addEventListener('keydown', this._debugCallback, false);
@@ -58,17 +93,29 @@ class Lockdown extends UPlugin {
   }
 
   stop(): void {
+    if (LoafLib === null) return;
     this._clearInterval();
     window.removeEventListener('keydown', this._debugCallback, false);
     window.removeEventListener('keydown', this._keydownCallback, false);
     window.removeEventListener('mousemove', this._mousemoveCallback, false);
+    unpatchAll('Lockdown');
     style.detach();
+  }
+
+  private _patchNotifications(): void {
+    before('Lockdown', getByProps('showNotification'), 'showNotification', (_, args: NotificationArgs) => {
+      if (this.locked) {
+        args[0] = 'https://raw.githubusercontent.com/toastythetoaster/Lockdown/dev/lock_sparkles.png';
+        args[1] = '';
+        args[2] = 'You have a new message.';
+      }
+    });
   }
 
   // Handle user onboarding
   private _onboardUser(): void {
     //@ts-ignore
-    const modal = openModal(props => <NewUserModal {...props} onSetPasscode={this._setPasscode} onFinish={() => Astra.plugins.reload() && closeModal(modal)} onClose={() => Astra.plugins.disable('Lockdown') && closeModal(modal)}/>, { onCloseRequest: () => Astra.plugins.disable('Lockdown') && closeModal(modal) });
+    const modal = openModal(props => <NewUserModal {...props} onSetPasscode={this._setPasscode} onFinish={() => Astra.plugins.reload('Lockdown') && closeModal(modal)} onClose={() => Astra.plugins.disable('Lockdown') && closeModal(modal)}/>, { onCloseRequest: () => Astra.plugins.disable('Lockdown') && closeModal(modal) });
   }
 
   // Set passcode
@@ -125,30 +172,18 @@ class Lockdown extends UPlugin {
 
   // Reset lock timeout on mouse movement
   private _mousemoveCallback(_ev: MouseEvent): void {
-    try {
-      this.lastFocus = Date.now();
-    } catch (e) {
-      Astra.error(e);
-    }
+    this.lastFocus = Date.now();
   }
 
   // Reset lock timeout on keypress
   private _keydownCallback(ev: KeyboardEvent): void {
-    try {
-      this.lastFocus = Date.now();
-      if (!ev.repeat && ev.ctrlKey && ev.key === 'l') this._lock();
-    } catch (e) {
-      Astra.error(e);
-    }
+    this.lastFocus = Date.now();
+    if (!ev.repeat && ev.ctrlKey && ev.key === 'l') this._lock();
   }
 
   // Lock the client if it has been idle for too long
   private _intervalCallback(): void {
-    try {
-      if (this._compareTime(Date.now())) this._lock();
-    } catch (e) {
-      Astra.error(e);
-    }
+    if (this._compareTime(Date.now())) this._lock();
   }
 
   // Unlock the client if the debug keystroke is enabled and pressed

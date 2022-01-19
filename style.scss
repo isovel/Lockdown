@@ -1,10 +1,16 @@
+
+/* ——————— Copyright (c) 2021-2022 toastythetoaster. All rights reserved. ———————
+ *
+ * Lockdown Stylesheet
+ *
+ * —————————————————————————————————————————————————————————————————————————————— */
+
 .lockdown-modal-container {
     pointer-events: none;
     user-select: none;
     min-width: 100vw;
     min-height: 100vh;
     background-color: var(--background-floating);
-    backdrop-filter: blur(25px);
     display: flex;
     justify-content: center;
     align-items: center;

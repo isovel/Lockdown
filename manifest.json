@@ -1,9 +1,17 @@
 {
     "name": "Lockdown",
     "description": "Locks the discord client after a certain amount of time and requires a passcode to unlock it.",
-    "version": "1.0.0-β4",
+    "version": "1.0.0-β5",
     "author": {
-        "name": "Toasty",
-        "id": "255515821541949440"
+      "name": "Toasty",
+      "id": "255515821541949440"
+    },
+    "id": "Lockdown",
+    "support": "NDzjMB2WhR",
+    "donations": [
+      {
+        "name": "Ko-fi",
+        "link": "https://ko-fi.com/slice"
       }
+    ]
 }

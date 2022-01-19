@@ -1,9 +1,9 @@
 
-/* ———————————————————— Copyright (c) 2021 toastythetoaster ————————————————————
+/* ——————— Copyright (c) 2021-2022 toastythetoaster. All rights reserved. ———————
  *
  * Lock Modal Component
  *
- * ————————————————————————————————————————————————————————————————————————————— */
+ * —————————————————————————————————————————————————————————————————————————————— */
 
 import { React, DNGetter, getByProps } from '@webpack';
 import { makeLazy } from '@util';
@@ -37,7 +37,7 @@ const LockModal = makeLazy({
     }
 
     class LockModal extends React.PureComponent<LockModalProps, LockModalState> {
-      state = { 
+      state = {
         passcode: '',
         submitError: null
       };
@@ -45,8 +45,8 @@ const LockModal = makeLazy({
         return (
           <div className='lockdown-modal-container'>
             <ModalRoot className='lockdown-modal' transitionState={this.props.transitionState} size={ModalSize.SMALL}>
-              <ModalHeader separator={false} className='header-3ydO_m'>
-                <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-33m_XM'>
+              <ModalHeader separator={false} className='header-1LEkUo'>
+                <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-2tnl9d'>
                   Locked
                   <LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
                 </Text>
@@ -58,10 +58,10 @@ const LockModal = makeLazy({
                   submitError: 'Incorrect passcode' 
                 });
               }}>
-                <ModalContent className='content-1AKki_'>
+                <ModalContent className='content-qdMtCa'>
                   <Input label='Passcode' name='Passcode' autoFocus={true} value={this.state.passcode} onChange={(passcode: string): void => this.setState({ passcode, submitError: null })} error={this.state.submitError} type='password'/>
                 </ModalContent>
-                <ModalFooter className='footer-2YW1l'>
+                <ModalFooter>
                   <Button color={this.state.submitError ? Button.Colors.PRIMARY : Button.Colors.BRAND} disabled={!!this.state.submitError} className='lockdown-btn-unlock' type='submit'>
                     Unlock
                   </Button>
