@@ -7,11 +7,13 @@
 
 import { React } from '@webpack';
 
-export default class LockIcon extends React.Component<{width: string, height: string, style?: any}, {}> {
+export default class LockIcon extends React.Component<{width?: string, height: string, style?: any}, {}> {
   render(): any {
+    const s = this.props.width || this.props.height;
+    const size = { wisth: s, height: s };
     return (
       <>
-        <svg width={this.props.width} height={this.props.height} style={this.props.style} viewBox='0 0 120 90'>
+        <svg {...size} viewBox='0 0 120 90'>
           <defs>
             <linearGradient id='linear-gradient' x1='35.37' y1='10.71' x2='52.77' y2='31.55' gradientUnits='userSpaceOnUse'>
               <stop offset='0' stopColor='#4788ff'/>
