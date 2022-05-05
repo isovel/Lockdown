@@ -5,7 +5,7 @@
  *
  * —————————————————————————————————————————————————————————————————————————————— */
 
-import { React, DNGetter, getByProps } from '@webpack';
+import { React, getByProps, getByDisplayName } from '@webpack';
 import { makeLazy } from '@util';
 import { ErrorBoundary } from '@components';
 import { Modals } from '@modules';
@@ -17,7 +17,7 @@ const LockModal = makeLazy({
     //@ts-ignore
     const { ModalRoot, ModalSize, ModalHeader, ModalContent, ModalFooter } = Modals.Components;
 
-    const { Text } = DNGetter;
+    const Text = getByDisplayName('LegacyText');
 
     const ButtonOptions = getByProps('ButtonLink');
     const Button = ButtonOptions.default;
@@ -47,8 +47,7 @@ const LockModal = makeLazy({
             <ModalRoot className='lockdown-modal' transitionState={this.props.transitionState} size={ModalSize.SMALL}>
               <ModalHeader separator={false} className='header-1LEkUo'>
                 <Text color={Text.Colors.HEADER_PRIMARY} size={Text.Sizes.SIZE_24} className='title-2tnl9d'>
-                  Locked
-                  <LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
+                  Locked&nbsp;&nbsp;<LockIcon height='24px' style={{ marginLeft: '0.25em' }} />
                 </Text>
               </ModalHeader>
               <form onSubmit={(e): void => {
