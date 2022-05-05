@@ -23,24 +23,25 @@ try {
 } catch (e) {
   if (global.LoafLib) ({ LoafLib } = global);
   else {
+    const { id: pluginId, name: pluginDisplayName } = require('manifest.json');
     const { Text } = require('@webpack').DNGetter;
     openConfirmationModal(
       'Missing Library',
       <Text color={Text.Colors.STANDARD} size={Text.Sizes.SIZE_16}>
-        The library <strong>LoafLib</strong> required for <strong>Lockdown</strong> is missing.
+        The library <strong>LoafLib</strong> required for <strong>{pluginDisplayName}</strong> is missing.
         Please click Download Now to download it.
       </Text>,
       {
         cancelText: 'Cancel',
         confirmText: 'Download Now',
-        modalKey: 'Lockdown_DEP_MODAL',
+        modalKey: `${pluginId}_DEP_MODAL`,
         onConfirm: () => {
           const path = require('path');
           const git = require('isomorphic-git');
           const http = require('isomorphic-git/http/node');
           const fs = require('fs');
           git.clone({ fs, http, dir: path.join(__dirname, '../', 'LoafLib'), url: 'https://github.com/toastythetoaster/LoafLib' }).then(() => {
-            Astra.plugins.reload('Lockdown');
+            Astra.plugins.reload(pluginId);
           });
         }
       }
@@ -83,7 +84,7 @@ class Lockdown extends UPlugin {
           }
         ]
       };
-      suppressErrors(this._patchNotifications.bind(this))(this.promises);
+      suppressErrors(this._patchNotifications)(this.promises);
       window.addEventListener('mousemove', this._mousemoveCallback, false);
       window.addEventListener('keydown', this._keydownCallback, false);
       window.addEventListener('keydown', this._debugCallback, false);
@@ -112,6 +113,19 @@ class Lockdown extends UPlugin {
     });
   }
 
+  private _updateWindowTitle(): void {
+    const titleId = 'lockdown-title';
+    if (this.locked) {
+      const el = document.createElement('title');
+      el.innerText = 'Locked';
+      el.id = titleId;
+      document.head.prepend(el);
+    } else {
+      const el = document.querySelector(`#${titleId}`);
+      el && el.remove();
+    }
+  }
+
   // Handle user onboarding
   private _onboardUser(): void {
     //@ts-ignore
@@ -138,6 +152,7 @@ class Lockdown extends UPlugin {
     closeAllModals();
     //@ts-ignore
     this.lockModal = openModal(props => <LockModal {...props} onUnlock={(passcode): void | boolean => this._unlock(passcode)}/>, { onCloseRequest: () => null });
+    this._updateWindowTitle();
   }
 
   // Unlock the client
@@ -147,9 +162,9 @@ class Lockdown extends UPlugin {
       this.lastFocus = Date.now();
       closeModal(this.lockModal);
       this.lockModal = null;
+      this._updateWindowTitle();
+      return true;
     } else return false;
-    
-    return true;
   }
 
   // Set locking timeout interval
